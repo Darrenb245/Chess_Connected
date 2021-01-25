@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1081139186908",
+    "firebase_url": "https://connedgamingturnbased.firebaseio.com",
+    "project_id": "connedgamingturnbased",
+    "storage_bucket": "connedgamingturnbased.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1081139186908:android:cb8e8a78b2d32bd59a7819",
+        "android_client_info": {
+          "package_name": "com.julian.app1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1081139186908-1o79lhi0n0sdip727e3ovak4945id0ln.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFDQcFaS12f-CECxkuiTm7138kyAB0rrw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1081139186908-1o79lhi0n0sdip727e3ovak4945id0ln.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
