@@ -26,12 +26,17 @@ public class GameManager : MonoBehaviour
         StartCoroutine(initDB(path));
         SceneManager.LoadScene("Game");
         StartCoroutine(fbScript.downloadAndSaveImage());
+        //StartCoroutine(downloadPieces());
+        fbScript.downloadGreenPieces("blackPawn");
     }
 
     public void onClickQuit()
     {
         Application.Quit();
     }
+
+
+   
 
     IEnumerator clearDB()
     {
@@ -42,6 +47,16 @@ public class GameManager : MonoBehaviour
     IEnumerator initDB(string path)
     {
         yield return fbScript.initFirebase(path);
+    }
+
+
+    IEnumerator downloadPieces()
+    {
+        yield return fbScript.downloadGreenPieces("blackPawn");
+        yield return fbScript.downloadGreenPieces("blackKing");
+        yield return fbScript.downloadGreenPieces("blackKnight");
+        yield return fbScript.downloadGreenPieces("blackRook");
+        yield return fbScript.downloadGreenPieces("blackQueen");
     }
 }
 

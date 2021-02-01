@@ -49,17 +49,7 @@ public class firebaseScript : MonoBehaviour
     public IEnumerator downloadAndSaveImage()
     {
         string pathToSaveIn = Application.persistentDataPath;
-        string[] backgroundImages = new string[] { "Pink/black_king.png", "Pink/Invert 2.png",
-           "Pink/black_queen.png",
-            "Pink/black_pawn.png",
-            "Pink/black_rook.png",
-            "Pink/Invert 2-1.png",
-            "Pink/white_king.png",
-            "Pink/white_bishop.png",
-             "Pink/white_pawn.png",
-             "Pink/white_rook.png",
-             "Pink/white_knight.png",
-              "Pink/white_queen.png", };                   };
+        string[] backgroundImages = new string[] { "gs://darrenbutt-14f73.appspot.com/bg1.jpg", "gs://darrenbutt-14f73.appspot.com/bg2.jpg", "gs://darrenbutt-14f73.appspot.com/bg3.jpg", "gs://darrenbutt-14f73.appspot.com/bg4.jpg" };
         string randomBackgroundImage = backgroundImages[UnityEngine.Random.Range(0, backgroundImages.Length)];
 
         storage = FirebaseStorage.DefaultInstance;
@@ -97,6 +87,50 @@ public class firebaseScript : MonoBehaviour
 
         yield return null;
     }
+
+
+
+    public IEnumerator downloadGreenPieces(string name)
+    {
+        string pathToSaveIn = Application.persistentDataPath;
+        
+        string chess = "gs://darrenbutt-14f73.appspot.com/Green/" + name + ".png";
+
+        storage = FirebaseStorage.DefaultInstance;
+        
+
+        string filename = Application.persistentDataPath + "/green.png";
+
+        StorageReference storage_ref = storage.GetReferenceFromUrl(chess);
+
+        Task task = storage_ref.GetFileAsync(filename,
+          new Firebase.Storage.StorageProgress<DownloadState>((DownloadState state) => {
+              // called periodically during the download
+              Debug.Log(String.Format(
+                "Progress: {0} of {1} bytes transferred.",
+                state.BytesTransferred,
+                state.TotalByteCount
+              ));
+          }), CancellationToken.None);
+
+        task.ContinueWith(resultTask => {
+            if (!resultTask.IsFaulted && !resultTask.IsCanceled)
+            {
+                Debug.Log("Download finished.");
+            }
+        });
+
+        Debug.Log(filename);
+
+        yield return new WaitUntil(() => task.IsCompleted);
+
+        Sprite chesspieces = LoadSprite(filename);
+        GameObject.Find(name).GetComponent<SpriteRenderer>().sprite = chesspieces;
+
+        yield return null;
+    }
+
+
 
     public IEnumerator clearFirebase()
     {

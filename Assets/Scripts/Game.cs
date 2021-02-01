@@ -12,7 +12,7 @@ public class Game : MonoBehaviour
     private GameObject[] playerBlack = new GameObject [16];
     private GameObject[] playerWhite = new GameObject [16];
 
-    private string currentPlayer = "white";
+    public static string currentPlayer = "white";
     private bool gameOver = false;
     public string playerWinner;
 
@@ -53,6 +53,18 @@ public class Game : MonoBehaviour
         return obj;
     }
 
+
+    public void surrender()
+    {
+        if (currentPlayer == "white")
+        {
+            SceneManager.LoadScene("P2Victory");
+        }
+        else
+        {
+            SceneManager.LoadScene("P1Victory");
+        }
+    }
     public void setPos(GameObject obj)
     {
         ChessMan cm = obj.GetComponent<ChessMan>();
