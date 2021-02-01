@@ -17,15 +17,144 @@ using System.IO;
 
 public class firebaseScript : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public bool signedin = false;
+    DatabaseReference reference;
+
+    //reference to the storage bucket
+    FirebaseStorage storage;
+
+    //main data dictionary
+    Dictionary<string, object> myDataDictionary;
+
+    FirebaseAuth auth;
+
+    string email = "darren-97-@hotmail.com";
+    string password = "Poggers1";
+    string path = "https://darrenbutt-14f73-default-rtdb.firebaseio.com/";
+
+    private Sprite LoadSprite(string path)
     {
-        
+        if (string.IsNullOrEmpty(path)) return null;
+        if (System.IO.File.Exists(path))
+        {
+            byte[] bytes = System.IO.File.ReadAllBytes(path);
+            Texture2D texture = new Texture2D(1, 1);
+            texture.LoadImage(bytes);
+            Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+            return sprite;
+        }
+        return null;
     }
 
-    // Update is called once per frame
-    void Update()
+    public IEnumerator downloadAndSaveImage()
     {
-        
+        string pathToSaveIn = Application.persistentDataPath;
+        string[] backgroundImages = new string[] { "Pink/black_king.png", "Pink/Invert 2.png",
+           "Pink/black_queen.png",
+            "Pink/black_pawn.png",
+            "Pink/black_rook.png",
+            "Pink/Invert 2-1.png",
+            "Pink/white_king.png",
+            "Pink/white_bishop.png",
+             "Pink/white_pawn.png",
+             "Pink/white_rook.png",
+             "Pink/white_knight.png",
+              "Pink/white_queen.png", };                   };
+        string randomBackgroundImage = backgroundImages[UnityEngine.Random.Range(0, backgroundImages.Length)];
+
+        storage = FirebaseStorage.DefaultInstance;
+
+        // Create local filesystem URL
+
+        string filename = Application.persistentDataPath + "/BackgroundImage.jpg";
+
+        StorageReference storage_ref = storage.GetReferenceFromUrl(randomBackgroundImage);
+
+        // Start downloading a file
+        Task task = storage_ref.GetFileAsync(filename,
+          new Firebase.Storage.StorageProgress<DownloadState>((DownloadState state) => {
+              // called periodically during the download
+              Debug.Log(String.Format(
+                "Progress: {0} of {1} bytes transferred.",
+                state.BytesTransferred,
+                state.TotalByteCount
+              ));
+          }), CancellationToken.None);
+
+        task.ContinueWith(resultTask => {
+            if (!resultTask.IsFaulted && !resultTask.IsCanceled)
+            {
+                Debug.Log("Download finished.");
+            }
+        });
+
+        Debug.Log(filename);
+
+        yield return new WaitUntil(() => task.IsCompleted);
+
+        Sprite backgroundImage = LoadSprite(filename);
+        GameObject.Find("BackgroundImage").GetComponent<SpriteRenderer>().sprite = backgroundImage;
+
+        yield return null;
+    }
+
+    public IEnumerator clearFirebase()
+    {
+        Task removeAllRecords = reference.RemoveValueAsync().ContinueWithOnMainThread(
+            rmAllRecords =>
+            {
+                if (rmAllRecords.IsCompleted)
+                {
+                    Debug.Log("Database clear");
+                }
+            });
+
+        yield return new WaitUntil(() => removeAllRecords.IsCompleted);
+
+    }
+    public IEnumerator initFirebase(string path)
+    {
+        if (!signedin)
+        {
+            FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://darrenbutt-14f73-default-rtdb.firebaseio.com/");
+            reference = FirebaseDatabase.DefaultInstance.RootReference;
+            yield return signInToFirebase();
+            Debug.Log("Firebase Initialized!");
+            yield return true;
+            signedin = true;
+        }
+        else
+        {
+            yield return null;
+        }
+    }
+    IEnumerator signInToFirebase()
+    {
+        auth = FirebaseAuth.DefaultInstance;
+
+        //the outside task is a DIFFERENT NAME to the anonymous inner class
+        Task signintask = auth.SignInWithEmailAndPasswordAsync(email, password).ContinueWithOnMainThread(
+             signInTask =>
+             {
+                 if (signInTask.IsCanceled)
+                 {
+                     //write cancelled in the console
+                     Debug.Log("Cancelled!");
+                     return;
+                 }
+                 if (signInTask.IsFaulted)
+                 {
+                     //write the actual exception in the console
+                     Debug.Log("Something went wrong!" + signInTask.Exception);
+                     return;
+                 }
+
+                 Firebase.Auth.FirebaseUser loggedInUser = signInTask.Result;
+                 Debug.Log("User " + loggedInUser.DisplayName + " has logged in!");
+             }
+            );
+        yield return new WaitUntil(() => signintask.IsCompleted);
+
+        Debug.Log("User has signed in");
     }
 }
