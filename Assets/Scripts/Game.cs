@@ -16,11 +16,19 @@ public class Game : MonoBehaviour
     private bool gameOver = false;
     public string playerWinner;
 
+
+    public float p1time, p2time;
+
+    [SerializeField] Text p1Timer, p2Timer;
     // Start is called before the first frame update
     void Start()
     {
+        p1time = 300f;
+        p2time = 300f;
+
         playerWhite = new GameObject[]
         {
+
             Create ("whiteRook", 0,0), Create ("whiteKnight", 1,0), Create ("whiteBishop", 2,0), Create ("whiteQueen", 3,0),
             Create ("whiteKing", 4,0), Create ("whiteBishop", 5,0), Create ("whiteKnight", 6,0), Create ("whiteRook", 7,0),
             Create ("whitePawn", 0,1), Create ("whitePawn", 1,1), Create ("whitePawn", 2,1), Create ("whitePawn", 3,1),
@@ -121,6 +129,34 @@ public class Game : MonoBehaviour
         {
             StartCoroutine(LoadMainMenu()); 
         }
+
+        if(currentPlayer == "white" && gameOver == false)
+        {
+            p1time -= 1 * Time.deltaTime;
+        } 
+        else if (currentPlayer == "black" && gameOver == false)
+        {
+            p2time -= 1 * Time.deltaTime;
+        }
+
+        if(p1time == 0 || p1time <= 0)
+        {
+            p1time = 0;
+            gameOver = true;
+            GameObject.FindGameObjectWithTag("WinnerText").GetComponent<Text>().enabled = true;
+            GameObject.FindGameObjectWithTag("WinnerText").GetComponent<Text>().text = playerWinner + " is the winner";
+        }
+
+        else if(p2time == 0 || p2time <= 0)
+        {
+            p2time = 0;
+            gameOver = true;
+            GameObject.FindGameObjectWithTag("WinnerText").GetComponent<Text>().enabled = true;
+            GameObject.FindGameObjectWithTag("WinnerText").GetComponent<Text>().text = playerWinner + " is the winner";
+        }
+
+        p1Timer.text = p1time.ToString("0");
+        p2Timer.text = p2time.ToString("0");
     }
 
     public void Winner (string playerWinner)

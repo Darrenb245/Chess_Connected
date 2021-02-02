@@ -61,23 +61,23 @@ public class GameManager : MonoBehaviour
 
     IEnumerator downloadPieces()
     {
-        yield return fbScript.downloadGreenPieces("blackPawn");
-        yield return fbScript.downloadGreenPieces("blackKing");
-        yield return fbScript.downloadGreenPieces("blackKnight");
-        yield return fbScript.downloadGreenPieces("blackRook");
-        yield return fbScript.downloadGreenPieces("blackQueen");
-        yield return fbScript.downloadGreenPieces("blackBishop");
+        yield return fbScript.downloadGreenPieces("whitePawn");
+        yield return fbScript.downloadGreenPieces("whiteKing");
+        yield return fbScript.downloadGreenPieces("whiteKnight");
+        yield return fbScript.downloadGreenPieces("whiteRook");
+        yield return fbScript.downloadGreenPieces("whiteQueen");
+        yield return fbScript.downloadGreenPieces("whiteBishop");
 
     }
 
     IEnumerator downloadPiecesPink()
     {
-        yield return fbScript.downloadPinkPieces("blackPawn");
-        yield return fbScript.downloadPinkPieces("blackKing");
-        yield return fbScript.downloadPinkPieces("blackKnight");
-        yield return fbScript.downloadPinkPieces("blackRook");
-        yield return fbScript.downloadPinkPieces("blackQueen");
-        yield return fbScript.downloadPinkPieces("blackBishop");
+        yield return fbScript.downloadPinkPieces("whitePawn");
+        yield return fbScript.downloadPinkPieces("whiteKing");
+        yield return fbScript.downloadPinkPieces("whiteKnight");
+        yield return fbScript.downloadPinkPieces("whiteRook");
+        yield return fbScript.downloadPinkPieces("whiteQueen");
+        yield return fbScript.downloadPinkPieces("whiteBishop");
 
     }
 }
