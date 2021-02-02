@@ -125,7 +125,10 @@ public class firebaseScript : MonoBehaviour
         yield return new WaitUntil(() => task.IsCompleted);
 
         Sprite chesspieces = LoadSprite(filename);
-        GameObject.Find(name).GetComponent<SpriteRenderer>().sprite = chesspieces;
+        foreach (GameObject gm in GameObject.FindGameObjectsWithTag(name))
+        {
+            gm.GetComponent<SpriteRenderer>().sprite = chesspieces;
+        }
 
         yield return null;
     }
