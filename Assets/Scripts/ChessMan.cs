@@ -190,7 +190,7 @@ public class ChessMan : MonoBehaviour
                 LineMovePlate(0, -1);
                 break;
 
-            case "BlackPawn":
+            case "blackPawn":
                 PawnMovePlate(xBoard, yBoard - 1);
                 break;
 

@@ -429,7 +429,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1623857014}
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: LoadScene
+        m_MethodName: LoadScenePink
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

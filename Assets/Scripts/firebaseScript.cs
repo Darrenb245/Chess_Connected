@@ -134,6 +134,50 @@ public class firebaseScript : MonoBehaviour
     }
 
 
+    public IEnumerator downloadPinkPieces(string name)
+    {
+        string pathToSaveIn = Application.persistentDataPath;
+
+        string chess = "gs://darrenbutt-14f73.appspot.com/Pink/" + name + ".png";
+
+        storage = FirebaseStorage.DefaultInstance;
+
+
+        string filename = Application.persistentDataPath + "/pink.png";
+
+        StorageReference storage_ref = storage.GetReferenceFromUrl(chess);
+
+        Task task = storage_ref.GetFileAsync(filename,
+          new Firebase.Storage.StorageProgress<DownloadState>((DownloadState state) => {
+              // called periodically during the download
+              Debug.Log(String.Format(
+                "Progress: {0} of {1} bytes transferred.",
+                state.BytesTransferred,
+                state.TotalByteCount
+              ));
+          }), CancellationToken.None);
+
+        task.ContinueWith(resultTask => {
+            if (!resultTask.IsFaulted && !resultTask.IsCanceled)
+            {
+                Debug.Log("Download finished.");
+            }
+        });
+
+        Debug.Log(filename);
+
+        yield return new WaitUntil(() => task.IsCompleted);
+
+        Sprite chesspieces = LoadSprite(filename);
+        foreach (GameObject gm in GameObject.FindGameObjectsWithTag(name))
+        {
+            gm.GetComponent<SpriteRenderer>().sprite = chesspieces;
+        }
+
+        yield return null;
+    }
+
+
 
     public IEnumerator clearFirebase()
     {
