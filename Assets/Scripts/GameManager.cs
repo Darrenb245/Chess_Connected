@@ -44,6 +44,10 @@ public class GameManager : MonoBehaviour
         Application.Quit();
     }
 
+    public void Restart()
+    {
+        SceneManager.LoadScene("GameMenu");
+    }
 
    
 
